@@ -1,0 +1,39 @@
+{
+  "name": "rangebounddatepicker-control",
+  "version": "0.0.1",
+  "description": "RangeBoundDatePicker Power Apps component framework control.",
+  "scripts": {
+    "build": "pcf-scripts build",
+    "clean": "pcf-scripts clean",
+    "lint": "pcf-scripts lint",
+    "lint:fix": "pcf-scripts lint fix",
+    "rebuild": "pcf-scripts rebuild",
+    "start": "pcf-scripts start",
+    "start:watch": "pcf-scripts start watch",
+    "refreshTypes": "pcf-scripts refreshTypes",
+    "pack": "npm run pack:unmanaged && npm run pack:managed",
+    "pack:managed": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Managed && cp solution/bin/Debug/solution.zip dist/RangeBoundDatePicker_Managed.zip",
+    "pack:unmanaged": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Unmanaged && cp solution/bin/Debug/solution.zip dist/RangeBoundDatePicker_Unmanaged.zip"
+  },
+  "dependencies": {
+    "@fluentui/react": "^8.120.3",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "devDependencies": {
+    "@microsoft/eslint-plugin-power-apps": "^0.2.6",
+    "@types/node": "^18.19.42",
+    "@types/powerapps-component-framework": "^1.3.4",
+    "@types/react": "^16.14.62",
+    "@types/react-dom": "^16.9.24",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "pcf-scripts": "^1.20.1",
+    "pcf-start": "^1.3.6",
+    "typescript": "^4.9.5"
+  }
+}

@@ -21,9 +21,6 @@ Gone are the days of writing intricate validation code. **RangeBoundDatePicker**
 https://github.com/user-attachments/assets/c9a3078e-9193-4782-9682-6510fd61f2f8
 
 
-[Managed Solution](https://github.com/SahilATech/RangeBoundDatePicker/raw/39f312625ecb9b0588153b1cad27452bb0ed8d51/Solutions/Solutions_managed.zip)
-
-
 ## Features
 
 - **Date and Time Selection**: Enables users to select dates with customizable constraints.
@@ -33,6 +30,29 @@ https://github.com/user-attachments/assets/c9a3078e-9193-4782-9682-6510fd61f2f8
 - **Text Input**: Optionally allow users to enter dates manually.
 - **Month Picker Overlay**: Show the month picker as an overlay on the date picker.
 - **Week Numbers**: Optionally display week numbers in the calendar.
+
+## Build From Source
+
+Before building the control make sure the following tools are available on your PATH:
+
+- Node.js (use the latest LTS release via `nvm use --lts`)
+- .NET SDK 8.0 or later (`dotnet --version`)
+- Power Platform CLI (`pac`) version 1.31.6 or newer
+
+Once the prerequisites are in place run the steps below from the repository root:
+
+1. `npm install`
+2. `npm run build` – compiles the control into `out/controls`
+3. `npm run pack` – generates Dataverse solution ZIPs in `dist/`
+
+The packaging step produces both managed and unmanaged solution files:
+
+- `dist/RangeBoundDatePicker_Unmanaged.zip`
+- `dist/RangeBoundDatePicker_Managed.zip`
+
+## Deploy To Dataverse
+
+Import the managed or unmanaged ZIP from `dist/` into your Dataverse environment (`Solutions > Import`). After the solution imports successfully, open the form designer for the table you want to enhance, add the **RangeBoundDatePicker** control to a date column, configure the properties, and publish your changes.
 
 
 ## Key Properties
@@ -77,13 +97,10 @@ The **RangeBoundDatePicker** control is ideal for scenarios where precise contro
 **Date Control**
 
 ![Dialog Open Button](https://github.com/SahilATech/RangeBoundDatePicker/blob/b43fe4819bd939b6c0067056861b1ae0e245e0ec/Images/DatePickerControl.png)
- 
+
  **Date Control - Month Picker As Overlay**
- 
+
 ![Dialog Box](https://github.com/SahilATech/RangeBoundDatePicker/blob/b43fe4819bd939b6c0067056861b1ae0e245e0ec/Images/DatePickerControl2.png)
-
-
-[Managed Solution](https://github.com/SahilATech/RangeBoundDatePicker/raw/39f312625ecb9b0588153b1cad27452bb0ed8d51/Solutions/Solutions_managed.zip)
 
 ## License
 

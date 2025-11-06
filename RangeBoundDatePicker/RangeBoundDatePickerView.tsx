@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Calendar, DatePicker, DefaultButton, defaultDatePickerStrings, ICalendarDayProps, IDatePickerStrings, mergeStyleSets } from '@fluentui/react';
+import { Calendar, DatePicker, DefaultButton, defaultDatePickerStrings, ICalendarDayProps, ICalendarProps, IDatePickerStrings, mergeStyleSets } from '@fluentui/react';
 
 export interface IRangeBoundDatePickerViewProps {
   minDate: Date;
@@ -33,7 +33,7 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
       maxDate : props.maxDate,
       initialSelectedDate : props.selectedDate,
       currentSelectedDate : props.selectedDate,
-      normalizedRestrictedDates: this.props.restrictedDates.map(date => this.normalizeDate(date))
+  normalizedRestrictedDates: this.props.restrictedDates.map((date: Date) => this.normalizeDate(date))
     };
     // Attach methods and state to the global window object so PCF can call updates
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,11 +50,12 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
   }
 
   private calendarDayProps: Partial<ICalendarDayProps> = {
-    customDayCellRef: (element, date, classNames) => {
+    customDayCellRef: (element: HTMLElement | null, date: Date, classNames: unknown) => {
       if (element) {
         element.title = 'custom title from customDayCellRef: ' + date.toString();
         if (this.props.disableDays.includes(date.getDay()) || this.state.normalizedRestrictedDates.includes(this.normalizeDate(date))){
-          classNames.dayOutsideBounds && element.classList.add(classNames.dayOutsideBounds);
+          const dayOutsideBounds = (classNames as { dayOutsideBounds?: string } | undefined)?.dayOutsideBounds;
+          dayOutsideBounds && element.classList.add(dayOutsideBounds);
           (element.children[0] as HTMLButtonElement).disabled = true;
         }
       }
@@ -66,7 +67,7 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
   };
 
   private restrictedDates = (dates: Date[]) => {
-    const dts = dates.map(date => this.normalizeDate(date));
+    const dts = dates.map((date: Date) => this.normalizeDate(date));
     this.setState({ normalizedRestrictedDates: dts });
   };
 
@@ -101,8 +102,7 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
             minDate={this.state.minDate}
             maxDate={this.state.maxDate}
             onSelectDate={this.updateSelectedDate}
-            // eslint-disable-next-line react/jsx-no-duplicate-props
-            value={this.state.currentSelectedDate??undefined}
+            value={this.state.currentSelectedDate ?? undefined}
             showGoToToday={true}
             highlightSelectedMonth={true}
 
@@ -111,7 +111,7 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
             showWeekNumbers={this.props.showWeekNumbers}
             isRequired={this.props.isRequired}
             disabled={this.props.isDisable}
-            calendarAs={(props) => <Calendar {...props} calendarDayProps={this.calendarDayProps} />}
+            calendarAs={(props: ICalendarProps) => <Calendar {...props} calendarDayProps={this.calendarDayProps} />}
           />
           <DefaultButton
             disabled={this.props.isDisable}
@@ -137,6 +137,3 @@ const styles = mergeStyleSets({
     flexGrow: 1, // Allows DatePicker to take available space
   }
 });
-
-
-

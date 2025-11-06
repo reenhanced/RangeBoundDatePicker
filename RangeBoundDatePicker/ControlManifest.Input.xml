@@ -4,7 +4,7 @@
     <external-service-usage enabled="false">
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    
+
     <property name="DateAndTime" display-name-key="DateAndTime" description-key="DateAndTime" of-type="DateAndTime.DateOnly" usage="bound" required="true" />
 
     <property name="dateRangeSelector" display-name-key="Range Configuration" description-key="Range Configuration" of-type="Enum" usage="input" required="true">
@@ -17,10 +17,10 @@
 
     <property name="pastTimeFrame" display-name-key="Past Duration (Year.Month.Day)" description-key="Specifies the past duration from today in the format Year.Month.Day. Adjusts dynamically based on the current date to determine how far back the date range should extend." of-type="SingleLine.Text" usage="input" required="false" />
     <property name="futureTimeFrame" display-name-key="Future Duration (Year.Month.Day)" description-key="Specifies the future duration from today in the format Year.Month.Day. Adjusts dynamically based on the current date to determine how far into the future the date range should extend." of-type="SingleLine.Text" usage="input" required="false" />
-    
+
 
     <property name="disableDays" display-name-key="Disable Days" description-key="Choose which days to disable in the calendar" of-type="Enum" usage="input" required="true" default-value="-1" >
-            <value name="No Days" display-name-key="Specific Duration" description-key="Specific Duration">-1</value>        
+            <value name="No Days" display-name-key="Specific Duration" description-key="Specific Duration">-1</value>
             <value name="Saturdays" display-name-key="Flexible Time Frame" description-key="Flexible Time Frame">6</value>
             <value name="Sundays" display-name-key="Flexible Time Frame" description-key="Flexible Time Frame">0</value>
             <value name="Weekends" display-name-key="Weekends" description-key="Disable Weekends">7</value>
@@ -36,7 +36,7 @@
 
 
 
-     
+
 
     <resources>
       <code path="index.ts" order="1"/>

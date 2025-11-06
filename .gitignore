@@ -1,0 +1,6 @@
+node_modules/
+out/
+solution/bin/
+solution/obj/
+obj/
+npm-debug.log*

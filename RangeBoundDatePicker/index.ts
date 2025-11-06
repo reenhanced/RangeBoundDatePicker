@@ -3,24 +3,22 @@ import { RangeBoundDatePickerView, IRangeBoundDatePickerViewProps } from "./Rang
 import * as React from "react";
 
 export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IInputs, IOutputs> {
-    private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
-    private notifyOutputChanged: () => void;
+    private theComponent!: ComponentFramework.ReactControl<IInputs, IOutputs>;
+    private notifyOutputChanged!: () => void;
 
     private _minDate:Date =new Date();
     private _maxDate:Date=new Date();
 
-    private _selectedDate:Date;
+    private _selectedDate!:Date;
     private _newSelectedDate: Date | null = null;
-    private _uniqueKey:string;
-    private _allowTextInput:boolean;
-    private _showMonthPickerAsOverlay:boolean;
-    private _showWeekNumbers:boolean;
-    private _isRequired:boolean;
+    private _uniqueKey!:string;
+    private _allowTextInput!:boolean;
+    private _showMonthPickerAsOverlay!:boolean;
+    private _showWeekNumbers!:boolean;
+    private _isRequired!:boolean;
     private _disableDays:number[]=[];
     private _restrictedDates:Date[]=[];
-    private _isDisable:boolean;
-
-    constructor() { }
+    private _isDisable!:boolean;
 
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
@@ -32,7 +30,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
     public init(
         context: ComponentFramework.Context<IInputs>,
         notifyOutputChanged: () => void,
-        state: ComponentFramework.Dictionary
+    _state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
         this._selectedDate = context.parameters.DateAndTime.raw!;
@@ -82,13 +80,13 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         }
     }
 
-    private dateConverter(date:string, duration:string="" ){
+    private dateConverter(date:string, duration = "" ){
         try {
             // normal date
             if(duration=="")
                 return new Date(date);
             //durations
-            else if(duration!==""){
+            else if(duration!=""){
                 // Split the duration string by '.' and convert to numbers
                 const [yearsStr, monthsStr, daysStr] = date.split('.').map(part => part.trim());
 
@@ -128,7 +126,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
      * @returns ReactElement root react element for the control
      */
-    public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
+    public updateView(_context: ComponentFramework.Context<IInputs>): React.ReactElement {
         const props: IRangeBoundDatePickerViewProps = {
             minDate: this._minDate,
             maxDate: this._maxDate,
