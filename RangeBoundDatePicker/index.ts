@@ -3,7 +3,6 @@ import { RangeBoundDatePickerView, IRangeBoundDatePickerViewProps } from "./Rang
 import * as React from "react";
 
 export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IInputs, IOutputs> {
-    private theComponent!: ComponentFramework.ReactControl<IInputs, IOutputs>;
     private notifyOutputChanged!: () => void;
 
     private _minDate:Date =new Date();
@@ -19,6 +18,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
     private _disableDays:number[]=[];
     private _restrictedDates:Date[]=[];
     private _isDisable!:boolean;
+    private _firstDayOfWeek = 0;
 
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
@@ -33,37 +33,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
     _state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
-        this._selectedDate = context.parameters.DateAndTime.raw!;
-        this._uniqueKey = context.parameters.DateAndTime.attributes?.LogicalName ?? "";
-
-        this._allowTextInput = context.parameters.allowTextInput.raw;
-        this._showMonthPickerAsOverlay = context.parameters.showMonthPickerAsOverlay.raw;
-        this._showWeekNumbers = context.parameters.showWeekNumbers.raw;
-        this._isRequired = context.parameters.isRequired.raw;
-
-        //Specific Duration
-        if(context.parameters.dateRangeSelector.raw == '0'){
-            this._minDate = this.dateConverter(context.parameters.minDate.raw!);
-            this._maxDate = this.dateConverter(context.parameters.maxDate.raw!);
-        }
-        //Flexible Time Frame
-        else if(context.parameters.dateRangeSelector.raw == '1'){
-            this._minDate = this.dateConverter(context.parameters.pastTimeFrame.raw!,"past");
-            this._maxDate = this.dateConverter(context.parameters.futureTimeFrame.raw!,"future");
-        }
-
-        if(context.parameters.disableDays.raw == '6')
-            this._disableDays=[6]; //saturdays
-        else if(context.parameters.disableDays.raw =='0')
-            this._disableDays=[0]; //Sundays
-        else if(context.parameters.disableDays.raw == '7')
-            this._disableDays=[0,6];//saturdays & Sundays
-        else
-            this._disableDays=[];
-
-        this._restrictedDates = this.disabledDatesParse(context.parameters.disabledDates.raw!)
-
-        this._isDisable = context.mode.isControlDisabled;
+        this.synchronizeContext(context);
     }
 
     private disabledDatesParse (listDates:string){
@@ -76,43 +46,74 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
             return dates;
 
         } catch (error) {
+            console.log("[RangeBoundDatePicker] disabledDatesParse error", { listDates, error });
             return [];
         }
     }
 
-    private dateConverter(date:string, duration = "" ){
+    private dateConverter(date: string | undefined | null, duration = "" ): Date | null {
         try {
-            // normal date
-            if(duration=="")
-                return new Date(date);
-            //durations
-            else if(duration!=""){
-                // Split the duration string by '.' and convert to numbers
-                const [yearsStr, monthsStr, daysStr] = date.split('.').map(part => part.trim());
-
-                // Convert strings to numbers and provide default values for missing parts
-                const years = this.isValidNumber(yearsStr) ? Number(yearsStr) : 0;
-                const months = this.isValidNumber(monthsStr) ? Number(monthsStr) : 0;
-                const days = this.isValidNumber(daysStr) ? Number(daysStr) : 0;
-
-                const todays = new Date();
-
-                if(duration=="future"){
-                    todays.setFullYear(todays.getFullYear() + years);
-                    todays.setMonth(todays.getMonth() + months);
-                    todays.setDate(todays.getDate() + days);
-                }
-                else if(duration=="past"){
-                    todays.setFullYear(todays.getFullYear() - years);
-                    todays.setMonth(todays.getMonth() - months);
-                    todays.setDate(todays.getDate() - days);
-                }
-                return todays;
+            if(!date){
+                console.log("[RangeBoundDatePicker] dateConverter received empty value", { duration });
+                return null;
             }
-            else return new Date();
+            if(duration === ""){
+                const parsed = new Date(date);
+                if (isNaN(parsed.getTime())) {
+                    console.log("[RangeBoundDatePicker] dateConverter produced invalid Date", { date, duration });
+                    return null;
+                }
+                return parsed;
+            }
+
+            const durationParts = date.split('.').map(part => part.trim()).filter(part => part.length > 0);
+            if(durationParts.length !== 3 && durationParts.length !== 4){
+                console.log("[RangeBoundDatePicker] dateConverter unsupported duration format", { date, duration });
+                return null;
+            }
+
+            const years = this.isValidNumber(durationParts[0]) ? Number(durationParts[0]) : 0;
+            let months = 0;
+            let weeks = 0;
+            let days = 0;
+
+            if(durationParts.length === 4){
+                months = this.isValidNumber(durationParts[1]) ? Number(durationParts[1]) : 0;
+                weeks = this.isValidNumber(durationParts[2]) ? Number(durationParts[2]) : 0;
+                days = this.isValidNumber(durationParts[3]) ? Number(durationParts[3]) : 0;
+            } else {
+                months = this.isValidNumber(durationParts[1]) ? Number(durationParts[1]) : 0;
+                days = this.isValidNumber(durationParts[2]) ? Number(durationParts[2]) : 0;
+            }
+
+            const adjusted = new Date();
+            adjusted.setHours(0, 0, 0, 0);
+
+            const weekCount = weeks > 0 ? Math.floor(weeks) : 0;
+
+            if(duration === "future"){
+                adjusted.setFullYear(adjusted.getFullYear() + years);
+                adjusted.setMonth(adjusted.getMonth() + months);
+                if(weekCount > 0){
+                    const normalizedDay = this.normalizeDayOfWeek(adjusted.getDay());
+                    const daysToEndOfWeek = 6 - normalizedDay;
+                    adjusted.setDate(adjusted.getDate() + daysToEndOfWeek + ((weekCount - 1) * 7));
+                }
+                adjusted.setDate(adjusted.getDate() + days);
+            }
+            else if(duration === "past"){
+                adjusted.setFullYear(adjusted.getFullYear() - years);
+                adjusted.setMonth(adjusted.getMonth() - months);
+                if(weekCount > 0){
+                    const normalizedDay = this.normalizeDayOfWeek(adjusted.getDay());
+                    adjusted.setDate(adjusted.getDate() - normalizedDay - ((weekCount - 1) * 7));
+                }
+                adjusted.setDate(adjusted.getDate() - days);
+            }
+            return adjusted;
         } catch (error) {
-            console.log(error);
-            return new Date();
+            console.log("[RangeBoundDatePicker] failed to convert date", { date, duration, error });
+            return null;
         }
     }
 
@@ -121,12 +122,18 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         return !isNaN(num) && isFinite(num);
     }
 
+    private normalizeDayOfWeek(day: number): number {
+        const normalized = (day - this._firstDayOfWeek) % 7;
+        return normalized < 0 ? normalized + 7 : normalized;
+    }
+
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
      * @returns ReactElement root react element for the control
      */
-    public updateView(_context: ComponentFramework.Context<IInputs>): React.ReactElement {
+    public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
+        this.synchronizeContext(context);
         const props: IRangeBoundDatePickerViewProps = {
             minDate: this._minDate,
             maxDate: this._maxDate,
@@ -150,6 +157,90 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         this._newSelectedDate = newValue ?? null;
         this.notifyOutputChanged();
     };
+
+    private synchronizeContext(context: ComponentFramework.Context<IInputs>): void {
+        const parameters = context.parameters;
+
+        const rawValues = {
+            dateRangeSelector: parameters.dateRangeSelector.raw,
+            minDate: parameters.minDate.raw,
+            maxDate: parameters.maxDate.raw,
+            pastTimeFrame: parameters.pastTimeFrame.raw,
+            futureTimeFrame: parameters.futureTimeFrame.raw,
+            disableDays: parameters.disableDays.raw,
+            disabledDates: parameters.disabledDates.raw,
+            allowTextInput: parameters.allowTextInput.raw,
+            showMonthPickerAsOverlay: parameters.showMonthPickerAsOverlay.raw,
+            showWeekNumbers: parameters.showWeekNumbers.raw,
+            isRequired: parameters.isRequired.raw,
+            selectedDate: parameters.DateAndTime.raw,
+            isControlDisabled: context.mode.isControlDisabled
+        };
+        console.log("[RangeBoundDatePicker] synchronizeContext inputs", rawValues);
+
+        const userSettings = context.userSettings as unknown as {
+            dateFormattingInfo?: { weekStartDay?: number };
+            weekStartDay?: number;
+        };
+        const weekStartCandidate = userSettings?.dateFormattingInfo?.weekStartDay ?? userSettings?.weekStartDay;
+        if (typeof weekStartCandidate === "number" && weekStartCandidate >= 0 && weekStartCandidate <= 6) {
+            this._firstDayOfWeek = weekStartCandidate;
+        }
+
+        this._uniqueKey = parameters.DateAndTime.attributes?.LogicalName ?? this._uniqueKey ?? "";
+        this._selectedDate = parameters.DateAndTime.raw ?? this._selectedDate ?? new Date();
+
+        const selector = parameters.dateRangeSelector.raw;
+        if (selector === "0") {
+            const minCandidate = this.dateConverter(parameters.minDate.raw);
+            const maxCandidate = this.dateConverter(parameters.maxDate.raw);
+            this._minDate = minCandidate ?? this._minDate;
+            this._maxDate = maxCandidate ?? this._maxDate;
+        } else if (selector === "1") {
+            const minCandidate = this.dateConverter(parameters.pastTimeFrame.raw, "past");
+            const maxCandidate = this.dateConverter(parameters.futureTimeFrame.raw, "future");
+            this._minDate = minCandidate ?? this._minDate;
+            this._maxDate = maxCandidate ?? this._maxDate;
+        } else {
+            console.log("[RangeBoundDatePicker] unknown dateRangeSelector value, resetting bounds", { selector });
+            this._minDate = new Date();
+            this._maxDate = new Date();
+        }
+
+        switch (parameters.disableDays.raw) {
+            case "6":
+                this._disableDays = [6];
+                break;
+            case "0":
+                this._disableDays = [0];
+                break;
+            case "7":
+                this._disableDays = [0, 6];
+                break;
+            default:
+                this._disableDays = [];
+        }
+
+        this._allowTextInput = parameters.allowTextInput.raw ?? false;
+        this._showMonthPickerAsOverlay = parameters.showMonthPickerAsOverlay.raw ?? false;
+        this._showWeekNumbers = parameters.showWeekNumbers.raw ?? false;
+        this._isRequired = parameters.isRequired.raw ?? false;
+        this._restrictedDates = this.disabledDatesParse(parameters.disabledDates.raw ?? "");
+        this._isDisable = context.mode.isControlDisabled;
+
+        console.log("[RangeBoundDatePicker] computed state", {
+            minDate: this._minDate,
+            maxDate: this._maxDate,
+            disableDays: this._disableDays,
+            restrictedDates: this._restrictedDates,
+            allowTextInput: this._allowTextInput,
+            showMonthPickerAsOverlay: this._showMonthPickerAsOverlay,
+            showWeekNumbers: this._showWeekNumbers,
+            isRequired: this._isRequired,
+            isDisable: this._isDisable,
+            firstDayOfWeek: this._firstDayOfWeek
+        });
+    }
 
     /**
      * It is called by the framework prior to a control receiving new data.

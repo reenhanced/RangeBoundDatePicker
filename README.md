@@ -50,9 +50,24 @@ The packaging step produces both managed and unmanaged solution files:
 - `dist/RangeBoundDatePicker_Unmanaged.zip`
 - `dist/RangeBoundDatePicker_Managed.zip`
 
+## Test In Development
+
+Use the built-in PCF test harness to iterate on the control without publishing to Dataverse:
+
+1. Run `npm run start` to launch the harness once, or `npm run start:watch` to rebuild on file changes.
+2. When the command completes, open the harness at `https://localhost:8080` and load the **RangeBoundDatePicker** sample.
+3. Edit the control source in `RangeBoundDatePicker/` and save—`start:watch` automatically rebuilds and refreshes the harness.
+4. Press `Ctrl+C` in the terminal to stop the harness when you are finished testing.
+
 ## Deploy To Dataverse
 
-Import the managed or unmanaged ZIP from `dist/` into your Dataverse environment (`Solutions > Import`). After the solution imports successfully, open the form designer for the table you want to enhance, add the **RangeBoundDatePicker** control to a date column, configure the properties, and publish your changes.
+1. Choose the ZIP that fits your scenario:
+   - Sandbox/customization environments: `dist/RangeBoundDatePicker_Unmanaged.zip`
+   - Production environments: `dist/RangeBoundDatePicker_Managed.zip`
+2. Import the solution via `make.powerapps.com` → **Solutions** → **Import** (or run `pac auth create`/`pac solution import` if you prefer the CLI).
+3. After the import completes, open the form designer for the table that should use the control.
+4. Select the target date column, switch to the **Components** / **Controls** tab, add **RangeBoundDatePicker**, and set it as the default visualization.
+5. Configure the control properties (min/max dates, disabled days, etc.), publish the form, and refresh your app to validate the experience.
 
 
 ## Key Properties

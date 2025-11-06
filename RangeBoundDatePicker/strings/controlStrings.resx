@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="control_displayName" xml:space="preserve">
+    <value>Range-Bound Date Picker</value>
+  </data>
+  <data name="control_description" xml:space="preserve">
+    <value>Configurable date picker that enforces fixed or relative date limits.</value>
+  </data>
+  <data name="prop_selectedDate_displayName" xml:space="preserve">
+    <value>Selected Date</value>
+  </data>
+  <data name="prop_selectedDate_description" xml:space="preserve">
+    <value>Bind to the date-only column that stores the user's selection.</value>
+  </data>
+  <data name="prop_rangeMode_displayName" xml:space="preserve">
+    <value>Range Mode</value>
+  </data>
+  <data name="prop_rangeMode_description" xml:space="preserve">
+    <value>Choose how the control calculates the minimum and maximum selectable dates.</value>
+  </data>
+  <data name="prop_rangeMode_optionFixed_displayName" xml:space="preserve">
+    <value>Set explicit min and max dates</value>
+  </data>
+  <data name="prop_rangeMode_optionFixed_description" xml:space="preserve">
+    <value>Use the Minimum Date and Maximum Date inputs to define the range.</value>
+  </data>
+  <data name="prop_rangeMode_optionRelative_displayName" xml:space="preserve">
+    <value>Offset from today's date</value>
+  </data>
+  <data name="prop_rangeMode_optionRelative_description" xml:space="preserve">
+    <value>Use the Past Duration and Future Duration inputs to define offsets from today. Weeks automatically align to your first day of the week.</value>
+  </data>
+  <data name="prop_minDate_displayName" xml:space="preserve">
+    <value>Minimum Date (YYYY-MM-DD)</value>
+  </data>
+  <data name="prop_minDate_description" xml:space="preserve">
+    <value>Enter the earliest selectable date in ISO format. Only used when Range Mode is set to explicit dates.</value>
+  </data>
+  <data name="prop_maxDate_displayName" xml:space="preserve">
+    <value>Maximum Date (YYYY-MM-DD)</value>
+  </data>
+  <data name="prop_maxDate_description" xml:space="preserve">
+    <value>Enter the latest selectable date in ISO format. Only used when Range Mode is set to explicit dates.</value>
+  </data>
+  <data name="prop_pastDuration_displayName" xml:space="preserve">
+    <value>Past Duration (Years.Months.Weeks.Days)</value>
+  </data>
+  <data name="prop_pastDuration_description" xml:space="preserve">
+    <value>Provide how far back from today users can go, using up to four dot-separated numbers: Years.Months.Weeks.Days. Weeks snap to the start of the week using your locale. For example 0.0.1.0 allows dates from the start of this week, while 0.0.2.0 reaches back to the prior week. Only used when Range Mode offsets from today.</value>
+  </data>
+  <data name="prop_futureDuration_displayName" xml:space="preserve">
+    <value>Future Duration (Years.Months.Weeks.Days)</value>
+  </data>
+  <data name="prop_futureDuration_description" xml:space="preserve">
+    <value>Provide how far ahead from today users can go, using up to four dot-separated numbers: Years.Months.Weeks.Days. Weeks snap to the end of the week using your locale. For example 0.0.1.0 limits selections to the end of this week, while 0.0.2.0 extends through the end of next week. Only used when Range Mode offsets from today.</value>
+  </data>
+  <data name="prop_disableDays_displayName" xml:space="preserve">
+    <value>Days to Disable</value>
+  </data>
+  <data name="prop_disableDays_description" xml:space="preserve">
+    <value>Select which days should not be available for selection.</value>
+  </data>
+  <data name="prop_disableDays_optionNone_displayName" xml:space="preserve">
+    <value>Do not disable any days</value>
+  </data>
+  <data name="prop_disableDays_optionNone_description" xml:space="preserve">
+    <value>All days of the week remain selectable.</value>
+  </data>
+  <data name="prop_disableDays_optionSaturday_displayName" xml:space="preserve">
+    <value>Disable Saturdays</value>
+  </data>
+  <data name="prop_disableDays_optionSaturday_description" xml:space="preserve">
+    <value>Prevent users from picking Saturdays.</value>
+  </data>
+  <data name="prop_disableDays_optionSunday_displayName" xml:space="preserve">
+    <value>Disable Sundays</value>
+  </data>
+  <data name="prop_disableDays_optionSunday_description" xml:space="preserve">
+    <value>Prevent users from picking Sundays.</value>
+  </data>
+  <data name="prop_disableDays_optionWeekend_displayName" xml:space="preserve">
+    <value>Disable Saturdays and Sundays</value>
+  </data>
+  <data name="prop_disableDays_optionWeekend_description" xml:space="preserve">
+    <value>Prevent weekend selections.</value>
+  </data>
+  <data name="prop_disabledDates_displayName" xml:space="preserve">
+    <value>Specific Dates to Disable</value>
+  </data>
+  <data name="prop_disabledDates_description" xml:space="preserve">
+    <value>Enter a comma-separated list of additional blocked dates in ISO format, for example 2024-08-20,2024-12-25.</value>
+  </data>
+  <data name="prop_allowTextInput_displayName" xml:space="preserve">
+    <value>Allow text entry</value>
+  </data>
+  <data name="prop_allowTextInput_description" xml:space="preserve">
+    <value>Permit users to type dates instead of only clicking the picker.</value>
+  </data>
+  <data name="prop_showMonthOverlay_displayName" xml:space="preserve">
+    <value>Show month picker as overlay</value>
+  </data>
+  <data name="prop_showMonthOverlay_description" xml:space="preserve">
+    <value>Display the month selector as a floating overlay when expanded.</value>
+  </data>
+  <data name="prop_showWeekNumbers_displayName" xml:space="preserve">
+    <value>Show week numbers</value>
+  </data>
+  <data name="prop_showWeekNumbers_description" xml:space="preserve">
+    <value>Display ISO week numbers in the calendar view.</value>
+  </data>
+  <data name="prop_isRequired_displayName" xml:space="preserve">
+    <value>Mark field as required</value>
+  </data>
+  <data name="prop_isRequired_description" xml:space="preserve">
+    <value>Treat an empty selection as invalid and show the required indicator.</value>
+  </data>
+</root>
