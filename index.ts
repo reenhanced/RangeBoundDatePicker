@@ -1,5 +1,5 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { HelloWorld, IHelloWorldProps } from "./HelloWorld";
+import { RangeBoundDatePickerView, IRangeBoundDatePickerViewProps } from "./RangeBoundDatePickerView";
 import * as React from "react";
 
 export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IInputs, IOutputs> {
@@ -8,7 +8,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
 
     private _minDate:Date =new Date();
     private _maxDate:Date=new Date();
-    
+
     private _selectedDate:Date;
     private _newSelectedDate: Date | null = null;
     private _uniqueKey:string;
@@ -44,14 +44,14 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         this._isRequired = context.parameters.isRequired.raw;
 
         //Specific Duration
-        if(context.parameters.dateRangeSelector.raw == '0'){             
-            this._minDate = this.dateConverter(context.parameters.minDate.raw!);        
+        if(context.parameters.dateRangeSelector.raw == '0'){
+            this._minDate = this.dateConverter(context.parameters.minDate.raw!);
             this._maxDate = this.dateConverter(context.parameters.maxDate.raw!);
         }
         //Flexible Time Frame
         else if(context.parameters.dateRangeSelector.raw == '1'){
-            this._minDate = this.dateConverter(context.parameters.pastTimeFrame.raw!,"past");        
-            this._maxDate = this.dateConverter(context.parameters.futureTimeFrame.raw!,"future");          
+            this._minDate = this.dateConverter(context.parameters.pastTimeFrame.raw!,"past");
+            this._maxDate = this.dateConverter(context.parameters.futureTimeFrame.raw!,"future");
         }
 
         if(context.parameters.disableDays.raw == '6')
@@ -60,7 +60,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
             this._disableDays=[0]; //Sundays
         else if(context.parameters.disableDays.raw == '7')
             this._disableDays=[0,6];//saturdays & Sundays
-        else 
+        else
             this._disableDays=[];
 
         this._restrictedDates = this.disabledDatesParse(context.parameters.disabledDates.raw!)
@@ -76,7 +76,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
             .map(dateStr => new Date(dateStr)).filter(date => !isNaN(date.getTime()));
 
             return dates;
-            
+
         } catch (error) {
             return [];
         }
@@ -86,7 +86,7 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         try {
             // normal date
             if(duration=="")
-                return new Date(date);  
+                return new Date(date);
             //durations
             else if(duration!==""){
                 // Split the duration string by '.' and convert to numbers
@@ -97,21 +97,21 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
                 const months = this.isValidNumber(monthsStr) ? Number(monthsStr) : 0;
                 const days = this.isValidNumber(daysStr) ? Number(daysStr) : 0;
 
-                const todays = new Date();  
-                
+                const todays = new Date();
+
                 if(duration=="future"){
-                    todays.setFullYear(todays.getFullYear() + years);    
+                    todays.setFullYear(todays.getFullYear() + years);
                     todays.setMonth(todays.getMonth() + months);
-                    todays.setDate(todays.getDate() + days);   
+                    todays.setDate(todays.getDate() + days);
                 }
                 else if(duration=="past"){
-                    todays.setFullYear(todays.getFullYear() - years);    
+                    todays.setFullYear(todays.getFullYear() - years);
                     todays.setMonth(todays.getMonth() - months);
                     todays.setDate(todays.getDate() - days);
-                }         
+                }
                 return todays;
-            }               
-            else return new Date();       
+            }
+            else return new Date();
         } catch (error) {
             console.log(error);
             return new Date();
@@ -129,22 +129,22 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        const props: IHelloWorldProps = {
+        const props: IRangeBoundDatePickerViewProps = {
             minDate: this._minDate,
-            maxDate:this._maxDate,
-            selectedDate:this._selectedDate,
+            maxDate: this._maxDate,
+            selectedDate: this._selectedDate,
             onSelectDate: this.onDateSelectChange,
             uniqueKey: this._uniqueKey,
-            allowTextInput : this._allowTextInput,
-            showMonthPickerAsOverlay : this._showMonthPickerAsOverlay ,
-            showWeekNumbers : this._showWeekNumbers ,
-            isRequired : this._isRequired,
-            disableDays:this._disableDays,
-            restrictedDates:this._restrictedDates,
-            isDisable:this._isDisable
+            allowTextInput: this._allowTextInput,
+            showMonthPickerAsOverlay: this._showMonthPickerAsOverlay,
+            showWeekNumbers: this._showWeekNumbers,
+            isRequired: this._isRequired,
+            disableDays: this._disableDays,
+            restrictedDates: this._restrictedDates,
+            isDisable: this._isDisable
         };
         return React.createElement(
-            HelloWorld, props
+            RangeBoundDatePickerView, props
         );
     }
 

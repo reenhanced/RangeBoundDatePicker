@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Calendar, DatePicker, DefaultButton, defaultCalendarStrings, defaultDatePickerStrings, ICalendarDayProps, ICalendarProps, ICalendarStyles, IDatePickerStrings, IDatePickerStyles, mergeStyleSets } from '@fluentui/react';
+import { Calendar, DatePicker, DefaultButton, defaultDatePickerStrings, ICalendarDayProps, IDatePickerStrings, mergeStyleSets } from '@fluentui/react';
 
-export interface IHelloWorldProps {
+export interface IRangeBoundDatePickerViewProps {
   minDate: Date;
   maxDate: Date;
   selectedDate?: Date;
@@ -16,7 +16,7 @@ export interface IHelloWorldProps {
   isDisable:boolean;
 }
 
-interface IHelloWorldState {
+interface IRangeBoundDatePickerViewState {
   minDate: Date;
   maxDate: Date;
   initialSelectedDate?:Date;
@@ -24,9 +24,9 @@ interface IHelloWorldState {
   normalizedRestrictedDates: string[] ;
 }
 
-export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldState> {
+export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePickerViewProps, IRangeBoundDatePickerViewState> {
 
-  constructor(props: IHelloWorldProps) {
+  constructor(props: IRangeBoundDatePickerViewProps) {
     super(props);
     this.state = {
       minDate: props.minDate,
@@ -35,11 +35,11 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
       currentSelectedDate : props.selectedDate,
       normalizedRestrictedDates: this.props.restrictedDates.map(date => this.normalizeDate(date))
     };
-     // Attach methods and state to the global window object
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-     (window as any)[`pcfDateControl_${props.uniqueKey}`] = {  
+    // Attach methods and state to the global window object so PCF can call updates
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any)[`pcfDateControl_${props.uniqueKey}`] = {
       dateRange: this.DateRange,
-      restrictedDates : this.restrictedDates
+      restrictedDates: this.restrictedDates
     };
 
     this.updateSelectedDate = this.updateSelectedDate.bind(this);
@@ -48,7 +48,7 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
   private normalizeDate(date: Date): string{
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
   }
-  
+
   private calendarDayProps: Partial<ICalendarDayProps> = {
     customDayCellRef: (element, date, classNames) => {
       if (element) {
@@ -60,7 +60,7 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
       }
     },
   };
-  
+
   private DateRange = (minDate: Date, maxDate: Date) => {
     this.setState({ minDate, maxDate });
   };
@@ -78,11 +78,11 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
   }
 
   private updateSelectedDate(newValue: Date | null | undefined){
-    this.props.onSelectDate(newValue);    
+    this.props.onSelectDate(newValue);
     this.setState({ currentSelectedDate: newValue ?? null });
   }
 
-  
+
   private resetDatePicker = () => {
       this.setState({ currentSelectedDate : this.state.initialSelectedDate});
       this.props.onSelectDate(this.state.initialSelectedDate);
@@ -99,11 +99,11 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
             ariaLabel="Select a date"
             strings={this.getDatePickerStrings()}
             minDate={this.state.minDate}
-            maxDate={this.state.maxDate}            
+            maxDate={this.state.maxDate}
             onSelectDate={this.updateSelectedDate}
             // eslint-disable-next-line react/jsx-no-duplicate-props
             value={this.state.currentSelectedDate??undefined}
-            showGoToToday={true}                        
+            showGoToToday={true}
             highlightSelectedMonth={true}
 
             allowTextInput={this.props.allowTextInput}
@@ -112,13 +112,13 @@ export class HelloWorld extends React.Component<IHelloWorldProps,IHelloWorldStat
             isRequired={this.props.isRequired}
             disabled={this.props.isDisable}
             calendarAs={(props) => <Calendar {...props} calendarDayProps={this.calendarDayProps} />}
-          />    
+          />
           <DefaultButton
             disabled={this.props.isDisable}
             id={"DefaultButton"}
             onClick={this.resetDatePicker}
             text={"Revert"}
-          />      
+          />
         </div>
       </>
     );
