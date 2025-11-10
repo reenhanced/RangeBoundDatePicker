@@ -1,46 +1,37 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest>
-  <control namespace="sa" constructor="RangeBoundDatePicker" version="0.0.1" display-name-key="control_displayName" description-key="control_description" control-type="virtual" >
-    <external-service-usage enabled="false">
-    </external-service-usage>
-    <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
+  <control namespace="sa" constructor="RangeBoundDatePicker" version="2.0.2" display-name-key="control_displayName" description-key="control_description" control-type="virtual">
+    <external-service-usage enabled="false" />
 
-  <property name="DateAndTime" display-name-key="prop_selectedDate_displayName" description-key="prop_selectedDate_description" of-type="DateAndTime.DateOnly" usage="bound" required="true" />
+    <property name="DateAndTime" display-name-key="prop_selectedDate_displayName" description-key="prop_selectedDate_description" of-type="DateAndTime.DateOnly" usage="bound" required="true" />
 
-  <property name="dateRangeSelector" display-name-key="prop_rangeMode_displayName" description-key="prop_rangeMode_description" of-type="Enum" usage="input" required="true">
-    <value name="FixedDates" display-name-key="prop_rangeMode_optionFixed_displayName" description-key="prop_rangeMode_optionFixed_description">0</value>
-    <value name="RelativeToToday" display-name-key="prop_rangeMode_optionRelative_displayName" description-key="prop_rangeMode_optionRelative_description">1</value>
-  </property>
+    <property name="dateRangeSelector" display-name-key="prop_rangeMode_displayName" description-key="prop_rangeMode_description" of-type="Enum" usage="input" required="true">
+      <value name="FixedDates" display-name-key="prop_rangeMode_optionFixed_displayName" description-key="prop_rangeMode_optionFixed_description">0</value>
+      <value name="RelativeToToday" display-name-key="prop_rangeMode_optionRelative_displayName" description-key="prop_rangeMode_optionRelative_description">1</value>
+    </property>
 
-  <property name="minDate" display-name-key="prop_minDate_displayName" description-key="prop_minDate_description" of-type="SingleLine.Text" usage="input" required="false" />
-  <property name="maxDate" display-name-key="prop_maxDate_displayName" description-key="prop_maxDate_description" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="minDate" display-name-key="prop_minDate_displayName" description-key="prop_minDate_description" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="maxDate" display-name-key="prop_maxDate_displayName" description-key="prop_maxDate_description" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="pastTimeFrame" display-name-key="prop_pastDuration_displayName" description-key="prop_pastDuration_description" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="futureTimeFrame" display-name-key="prop_futureDuration_displayName" description-key="prop_futureDuration_description" of-type="SingleLine.Text" usage="input" required="false" />
 
-  <property name="pastTimeFrame" display-name-key="prop_pastDuration_displayName" description-key="prop_pastDuration_description" of-type="SingleLine.Text" usage="input" required="false" />
-  <property name="futureTimeFrame" display-name-key="prop_futureDuration_displayName" description-key="prop_futureDuration_description" of-type="SingleLine.Text" usage="input" required="false" />
-
-
-  <property name="disableDays" display-name-key="prop_disableDays_displayName" description-key="prop_disableDays_description" of-type="Enum" usage="input" required="true" default-value="-1" >
+    <property name="disableDays" display-name-key="prop_disableDays_displayName" description-key="prop_disableDays_description" of-type="Enum" usage="input" required="true" default-value="-1">
       <value name="NoDays" display-name-key="prop_disableDays_optionNone_displayName" description-key="prop_disableDays_optionNone_description">-1</value>
       <value name="Saturdays" display-name-key="prop_disableDays_optionSaturday_displayName" description-key="prop_disableDays_optionSaturday_description">6</value>
       <value name="Sundays" display-name-key="prop_disableDays_optionSunday_displayName" description-key="prop_disableDays_optionSunday_description">0</value>
       <value name="Weekends" display-name-key="prop_disableDays_optionWeekend_displayName" description-key="prop_disableDays_optionWeekend_description">7</value>
-      </property>
+    </property>
 
-  <property name="disabledDates" display-name-key="prop_disabledDates_displayName" description-key="prop_disabledDates_description" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="disabledDates" display-name-key="prop_disabledDates_displayName" description-key="prop_disabledDates_description" of-type="SingleLine.Text" usage="input" required="false" />
 
-
-  <property name="allowTextInput" display-name-key="prop_allowTextInput_displayName" description-key="prop_allowTextInput_description" of-type="TwoOptions" usage="input" required="true" />
-  <property name="showMonthPickerAsOverlay" display-name-key="prop_showMonthOverlay_displayName" description-key="prop_showMonthOverlay_description" of-type="TwoOptions" usage="input" required="true" />
-  <property name="showWeekNumbers" display-name-key="prop_showWeekNumbers_displayName" description-key="prop_showWeekNumbers_description" of-type="TwoOptions" usage="input" required="true" />
-  <property name="isRequired" display-name-key="prop_isRequired_displayName" description-key="prop_isRequired_description" of-type="TwoOptions" usage="input" required="true" />
-
-
-
-
+    <property name="allowTextInput" display-name-key="prop_allowTextInput_displayName" description-key="prop_allowTextInput_description" of-type="TwoOptions" usage="input" required="true" />
+    <property name="showMonthPickerAsOverlay" display-name-key="prop_showMonthOverlay_displayName" description-key="prop_showMonthOverlay_description" of-type="TwoOptions" usage="input" required="true" />
+    <property name="showWeekNumbers" display-name-key="prop_showWeekNumbers_displayName" description-key="prop_showWeekNumbers_description" of-type="TwoOptions" usage="input" required="true" />
+    <property name="isRequired" display-name-key="prop_isRequired_displayName" description-key="prop_isRequired_description" of-type="TwoOptions" usage="input" required="true" />
 
     <resources>
-      <resx path="strings/controlStrings.resx" version="1.0.0" />
-      <code path="index.ts" order="1"/>
+      <code path="index.ts" order="1" />
+      <resx path="strings/controlStrings.1033.resx" version="1.0.0" />
       <platform-library name="React" version="16.8.6" />
       <platform-library name="Fluent" version="8.29.0" />
     </resources>

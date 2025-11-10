@@ -4,3 +4,4 @@ solution/bin/
 solution/obj/
 obj/
 npm-debug.log*
+dist/

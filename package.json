@@ -1,6 +1,6 @@
 {
   "name": "rangebounddatepicker-control",
-  "version": "0.0.1",
+  "version": "2.0.2",
   "description": "RangeBoundDatePicker Power Apps component framework control.",
   "scripts": {
     "build": "pcf-scripts build",
@@ -11,9 +11,10 @@
     "start": "pcf-scripts start",
     "start:watch": "pcf-scripts start watch",
     "refreshTypes": "pcf-scripts refreshTypes",
-    "pack": "npm run pack:unmanaged && npm run pack:managed",
-    "pack:managed": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Managed && cp solution/bin/Debug/solution.zip dist/RangeBoundDatePicker_Managed.zip",
-    "pack:unmanaged": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Unmanaged && cp solution/bin/Debug/solution.zip dist/RangeBoundDatePicker_Unmanaged.zip"
+    "sync:version": "node scripts/sync-version.js",
+    "pack": "npm run sync:version && npm run pack:unmanaged && npm run pack:managed",
+    "pack:managed": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Managed && node scripts/copy-solution-package.js managed",
+    "pack:unmanaged": "mkdir -p dist && dotnet msbuild solution/solution.cdsproj /restore /p:SolutionPackageType=Unmanaged && node scripts/copy-solution-package.js unmanaged"
   },
   "dependencies": {
     "@fluentui/react": "^8.120.3",

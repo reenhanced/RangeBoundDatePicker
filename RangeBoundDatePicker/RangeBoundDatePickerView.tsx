@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Calendar, DatePicker, DefaultButton, defaultDatePickerStrings, ICalendarDayProps, ICalendarProps, IDatePickerStrings, mergeStyleSets } from '@fluentui/react';
 
 export interface IRangeBoundDatePickerViewProps {
-  minDate: Date;
-  maxDate: Date;
+  minDate?: Date;
+  maxDate?: Date;
   selectedDate?: Date;
   onSelectDate: (newValue: Date | null | undefined) => void;
   uniqueKey:string;
@@ -17,8 +17,8 @@ export interface IRangeBoundDatePickerViewProps {
 }
 
 interface IRangeBoundDatePickerViewState {
-  minDate: Date;
-  maxDate: Date;
+  minDate?: Date;
+  maxDate?: Date;
   initialSelectedDate?:Date;
   currentSelectedDate?:Date | null | undefined;
   normalizedRestrictedDates: string[] ;
@@ -29,8 +29,8 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
   constructor(props: IRangeBoundDatePickerViewProps) {
     super(props);
     this.state = {
-      minDate: props.minDate,
-      maxDate : props.maxDate,
+  minDate: props.minDate,
+  maxDate : props.maxDate,
       initialSelectedDate : props.selectedDate,
       currentSelectedDate : props.selectedDate,
   normalizedRestrictedDates: this.props.restrictedDates.map((date: Date) => this.normalizeDate(date))
@@ -62,7 +62,7 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
     },
   };
 
-  private DateRange = (minDate: Date, maxDate: Date) => {
+  private DateRange = (minDate?: Date, maxDate?: Date) => {
     this.setState({ minDate, maxDate });
   };
 
@@ -72,9 +72,22 @@ export class RangeBoundDatePickerView extends React.Component<IRangeBoundDatePic
   };
 
   private getDatePickerStrings(): IDatePickerStrings {
+    const minDate = this.state.minDate;
+    const maxDate = this.state.maxDate;
+
+    let isOutOfBoundsErrorMessage = defaultDatePickerStrings.isOutOfBoundsErrorMessage;
+
+    if (minDate && maxDate) {
+      isOutOfBoundsErrorMessage = `Date must be between ${minDate.toLocaleDateString()} and ${maxDate.toLocaleDateString()}`;
+    } else if (minDate) {
+      isOutOfBoundsErrorMessage = `Date must be on or after ${minDate.toLocaleDateString()}`;
+    } else if (maxDate) {
+      isOutOfBoundsErrorMessage = `Date must be on or before ${maxDate.toLocaleDateString()}`;
+    }
+
     return {
       ...defaultDatePickerStrings,
-      isOutOfBoundsErrorMessage: `Date must be between ${this.state.minDate.toLocaleDateString()} and ${this.state.maxDate.toLocaleDateString()}`,
+      isOutOfBoundsErrorMessage,
     };
   }
 

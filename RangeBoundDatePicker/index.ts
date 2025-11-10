@@ -5,8 +5,8 @@ import * as React from "react";
 export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private notifyOutputChanged!: () => void;
 
-    private _minDate:Date =new Date();
-    private _maxDate:Date=new Date();
+    private _minDate: Date | undefined;
+    private _maxDate: Date | undefined;
 
     private _selectedDate!:Date;
     private _newSelectedDate: Date | null = null;
@@ -191,21 +191,27 @@ export class RangeBoundDatePicker implements ComponentFramework.ReactControl<IIn
         this._selectedDate = parameters.DateAndTime.raw ?? this._selectedDate ?? new Date();
 
         const selector = parameters.dateRangeSelector.raw;
+        let computedMin: Date | undefined;
+        let computedMax: Date | undefined;
+
         if (selector === "0") {
             const minCandidate = this.dateConverter(parameters.minDate.raw);
             const maxCandidate = this.dateConverter(parameters.maxDate.raw);
-            this._minDate = minCandidate ?? this._minDate;
-            this._maxDate = maxCandidate ?? this._maxDate;
+            computedMin = minCandidate ?? undefined;
+            computedMax = maxCandidate ?? undefined;
         } else if (selector === "1") {
             const minCandidate = this.dateConverter(parameters.pastTimeFrame.raw, "past");
             const maxCandidate = this.dateConverter(parameters.futureTimeFrame.raw, "future");
-            this._minDate = minCandidate ?? this._minDate;
-            this._maxDate = maxCandidate ?? this._maxDate;
+            computedMin = minCandidate ?? undefined;
+            computedMax = maxCandidate ?? undefined;
         } else {
             console.log("[RangeBoundDatePicker] unknown dateRangeSelector value, resetting bounds", { selector });
-            this._minDate = new Date();
-            this._maxDate = new Date();
+            computedMin = undefined;
+            computedMax = undefined;
         }
+
+        this._minDate = computedMin;
+        this._maxDate = computedMax;
 
         switch (parameters.disableDays.raw) {
             case "6":
